@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Local caches
+.torch-cache/
+.mpl-cache/
+.fc-cache/
+
+# Data + checkpoints + outputs (regenerable)
+data/
+checkpoints/
+
+# Original artifact provided to us, kept out of source control
+assignment-dataset.zip
