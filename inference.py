@@ -136,10 +136,29 @@ def run(args):
         det_results = model.predict_detections(
             img_t, score_thresh=args.score_thresh, nms_iou=args.nms_iou,
         )[0]
+        boxes = det_results["boxes"]
+        scores = det_results["scores"]
+        labels = det_results["labels"]
+
+        # Optional cleanup: keep only the top-K boxes per class.
+        # NMS already removes overlapping duplicates, but a model that's
+        # uncertain can still place several non-overlapping boxes of the same
+        # class at different spots. For images where you expect ~1 instance per
+        # class (like our cooking scenes), --top-k-per-class 1 gives a clean view.
+        if args.top_k_per_class > 0 and labels.numel() > 0:
+            keep = []
+            for cls in labels.unique():
+                cls_mask = (labels == cls).nonzero(as_tuple=False).squeeze(1)
+                cls_scores = scores[cls_mask]
+                top = cls_scores.topk(min(args.top_k_per_class, cls_scores.numel())).indices
+                keep.append(cls_mask[top])
+            keep = torch.cat(keep) if keep else torch.zeros((0,), dtype=torch.long, device=boxes.device)
+            boxes, scores, labels = boxes[keep], scores[keep], labels[keep]
+
         det = {
-            "boxes": det_results["boxes"].cpu().numpy(),
-            "scores": det_results["scores"].cpu().numpy(),
-            "labels": det_results["labels"].cpu().numpy(),
+            "boxes": boxes.cpu().numpy(),
+            "scores": scores.cpu().numpy(),
+            "labels": labels.cpu().numpy(),
         }
 
         visualize_one(
@@ -160,8 +179,11 @@ def parse_args():
                    help="One or more image files or directories.")
     p.add_argument("--output-dir", default="sample_outputs")
     p.add_argument("--image-size", type=int, default=256)
-    p.add_argument("--score-thresh", type=float, default=0.3)
+    p.add_argument("--score-thresh", type=float, default=0.4,
+                   help="Drop detections below this confidence. 0.4 gives clean visuals; lower it to see all candidates.")
     p.add_argument("--nms-iou", type=float, default=0.5)
+    p.add_argument("--top-k-per-class", type=int, default=0,
+                   help="If > 0, keep only the top-K highest-scored boxes per class after NMS (useful for one-instance-per-class scenes).")
     p.add_argument("--num-images", type=int, default=5)
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     return p.parse_args()

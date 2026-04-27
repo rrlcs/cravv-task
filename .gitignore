@@ -10,6 +10,7 @@ __pycache__/
 # Data + checkpoints + outputs (regenerable)
 data/
 checkpoints/
+sample_outputs/
 
 # Original artifact provided to us, kept out of source control
 assignment-dataset.zip

@@ -101,6 +101,16 @@ python inference.py \
 
 `--inputs` accepts any number of files or directories.
 
+For only one box per class:
+
+```bash
+python inference.py \
+  --checkpoint checkpoints/last.pt \
+  --inputs data/assignment-dataset/segmentation/images \
+  --output-dir sample_outputs \
+  --top-k-per-class 1
+```
+
 Sample output (one image -> one PNG):
 
 ![sample](sample_outputs/bubbling_1739828656796_A_jpg.rf.9c364cd73e026aa90fb79864427b7bb5.png)
