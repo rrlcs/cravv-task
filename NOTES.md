@@ -36,7 +36,7 @@ All tasks share the same **backbone (feature extractor)**, so learning from one 
 
 ---
 
-## 🤔 Why FPN instead of BiFPN?
+## Why FPN instead of BiFPN?
 
 Both help the model understand features at different scales.
 
@@ -49,7 +49,7 @@ We can switch to BiFPN later if needed.
 
 ---
 
-## 🔧 How each task is handled
+## How each task is handled
 
 ### 1. Segmentation
 - Combines features from multiple layers
@@ -69,7 +69,7 @@ We can switch to BiFPN later if needed.
 
 ---
 
-## ⚖️ How training is balanced
+## How training is balanced
 
 ### 1. Task sampling
 Each training step randomly picks one task.  
@@ -81,7 +81,7 @@ All task losses are similar in scale, so we simply add them.
 
 ---
 
-## 🏋️ How training is done
+## How training is done
 
 - One model, one optimizer
 - Each step trains only one task
@@ -91,7 +91,7 @@ All task losses are similar in scale, so we simply add them.
 
 ---
 
-## 🚀 What can be improved
+## What can be improved
 
 - Add **data augmentation** (flip, color jitter, etc.)
 - Use proper detection metrics like **mAP**
@@ -103,7 +103,7 @@ All task losses are similar in scale, so we simply add them.
 
 ---
 
-## 💡 Summary
+## Summary
 
 This is a **multi-task model** that:
 - Shares learning across tasks
