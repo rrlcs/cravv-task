@@ -9,10 +9,6 @@ pyramid, and **three task heads**:
 3. **State-classification head** — 5-way cooking-doneness classifier
    (`0`, `0.25`, `0.50`, `0.75`, `1.0`).
 
-> Focus is on **correctness and code clarity**, not full performance.
-> The trainer runs comfortably on CPU for smoke tests; on a small GPU the
-> defaults converge to reasonable predictions in a few minutes.
-
 ## Repository layout
 
 ```
